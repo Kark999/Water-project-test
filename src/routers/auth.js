@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-import { registerUserSchema } from '../validation/auth.js';
-import { registerUserController } from '../controllers/auth.js';
+import { registerUserSchema, updateUserSchema } from '../validation/auth.js';
+import {
+  getCurrentUserController,
+  registerUserController,
+  updateUserController,
+} from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { loginUserSchema } from '../validation/auth.js';
 import { loginUserController } from '../controllers/auth.js';
@@ -41,6 +45,15 @@ router.post(
   '/reset-pwd',
   validateBody(resetPasswordSchema),
   ctrlWrapper(resetPasswordController),
+);
+
+router.get('/current', authenticate, ctrlWrapper(getCurrentUserController));
+
+router.patch(
+  '/update',
+  authenticate,
+  validateBody(updateUserSchema),
+  ctrlWrapper(updateUserController),
 );
 
 export default router;

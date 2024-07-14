@@ -180,3 +180,22 @@ export const resetPassword = async (payload) => {
     { password: encryptedPassword },
   );
 };
+export const getCurrentUser = async (userId) => {
+  const user = await UsersCollection.findById(userId).select('-password');
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+  return user;
+};
+export const updateUser = async (userId, updateData) => {
+  const user = await UsersCollection.findOneAndUpdate(userId, updateData, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  return user;
+};

@@ -1,4 +1,4 @@
-import { registerUser } from '../services/auth.js';
+import { getCurrentUser, registerUser, updateUser } from '../services/auth.js';
 import { loginUser } from '../services/auth.js';
 import { THIRTY_DAYS, FIFTEEN_MINUTES } from '../constants/index.js';
 import { logoutUser } from '../services/auth.js';
@@ -88,5 +88,21 @@ export const resetPasswordController = async (req, res) => {
     status: 200,
     message: 'Password was successfully reset.',
     data: {},
+  });
+};
+export const getCurrentUserController = async (req, res) => {
+  const user = await getCurrentUser(req.user._id);
+  res.json({
+    status: 200,
+    message: 'Successfully retrieved user information!',
+    data: user,
+  });
+};
+export const updateUserController = async (req, res) => {
+  const updatedUser = await updateUser(req.user._id, req.body);
+  res.json({
+    status: 200,
+    message: 'User data updated successfully!',
+    data: updatedUser,
   });
 };
