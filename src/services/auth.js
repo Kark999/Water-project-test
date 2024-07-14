@@ -187,15 +187,16 @@ export const getCurrentUser = async (userId) => {
   }
   return user;
 };
-export const updateUser = async (userId, updateData) => {
-  const user = await UsersCollection.findOneAndUpdate(userId, updateData, {
+export const updateUser = async (userId, payload, options = {}) => {
+  const updatedUser = await UsersCollection.findOneAndUpdate(userId, payload, {
     new: true,
     runValidators: true,
+    ...options,
   });
 
-  if (!user) {
+  if (!updatedUser) {
     throw createHttpError(404, 'User not found');
   }
 
-  return user;
+  return updatedUser;
 };
