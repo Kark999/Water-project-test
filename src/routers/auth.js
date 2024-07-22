@@ -16,6 +16,7 @@ import { requestResetEmailSchema } from '../validation/auth.js';
 import { requestResetEmailController } from '../controllers/auth.js';
 import { resetPasswordSchema } from '../validation/auth.js';
 import { resetPasswordController } from '../controllers/auth.js';
+import { uploadMiddleware } from '../middlewares/uploadMiddleware.js';
 
 const router = Router();
 
@@ -52,6 +53,7 @@ router.get('/current', authenticate, ctrlWrapper(getCurrentUserController));
 router.patch(
   '/update',
   authenticate,
+  uploadMiddleware,
   validateBody(updateUserSchema),
   ctrlWrapper(updateUserController),
 );

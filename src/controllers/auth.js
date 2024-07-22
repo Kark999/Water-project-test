@@ -5,6 +5,7 @@ import { logoutUser } from '../services/auth.js';
 import { refreshUsersSession } from '../services/auth.js';
 import { requestResetToken } from '../services/auth.js';
 import { resetPassword } from '../services/auth.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const registerUserController = async (req, res) => {
   const user = await registerUser(req.body);
@@ -99,7 +100,17 @@ export const getCurrentUserController = async (req, res) => {
   });
 };
 export const updateUserController = async (req, res) => {
-  const updatedUser = await updateUser(req.user._id, req.body);
+  let photoUrl;
+  if (req.file) {
+    photoUrl = await saveFileToCloudinary(req.file.buffer);
+  }
+
+  const updateData = { ...req.body };
+  if (photoUrl) {
+    updateData.avatar = photoUrl;
+  }
+  const updatedUser = await updateUser(req.user._id, updateData);
+
   res.json({
     status: 200,
     message: 'User data updated successfully!',
